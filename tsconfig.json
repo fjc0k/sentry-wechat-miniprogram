@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "target": "es5",
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": false,
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "outDir": "lib",
+    "skipLibCheck": true,
+    "newLine": "LF",
+    "importHelpers": true
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules",
+    "lib",
+    "dist"
+  ],
+  "compileOnSave": false
+}

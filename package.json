@@ -1,0 +1,113 @@
+{
+  "name": "sentry-wechat-miniprogram",
+  "version": "0.0.0",
+  "description": "A project.",
+  "main": "index.js",
+  "author": {
+    "name": "Jay Fong",
+    "email": "fjc0kb@gmail.com",
+    "url": "https://github.com/fjc0k"
+  },
+  "license": "MIT",
+  "homepage": "https:/github.com/fjc0k/sentry-wechat-miniprogram",
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "https:/github.com/fjc0k/sentry-wechat-miniprogram.git"
+  },
+  "bugs": {
+    "url": "https:/github.com/fjc0k/sentry-wechat-miniprogram/issues"
+  },
+  "keywords": [
+    "sentry-wechat-miniprogram"
+  ],
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "build": "bili",
+    "test": "jest",
+    "test:cov": "jest --coverage",
+    "release": "standard-version --commit-all --no-verify && git push --follow-tags origin master && npm publish",
+    "release:major": "standard-version --commit-all --no-verify --release-as major && git push --follow-tags origin master && npm publish",
+    "release-beta": "standard-version --commit-all --no-verify --prerelease beta && git push --follow-tags origin master && npm publish --tag=next",
+    "release-beta:major": "standard-version --commit-all --no-verify --prerelease beta --release-as major && git push --follow-tags origin master && npm publish --tag=next"
+  },
+  "standard-version": {
+    "scripts": {
+      "postbump": "node -e 'console.log(\">> postbump <<\")'"
+    }
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": "io",
+    "rules": {
+      "new-cap": 0,
+      "prefer-const": 0
+    }
+  },
+  "eslintIgnore": [
+    "lib",
+    "dist",
+    "node_modules",
+    "__snapshots__"
+  ],
+  "commitlint": {
+    "extends": [
+      "io"
+    ]
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-commit": "lint-staged"
+    }
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+      "<rootDir>/src/**/*.ts"
+    ],
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json"
+    ]
+  },
+  "dependencies": {
+    "@sentry/core": "5.5.0",
+    "@sentry/types": "5.5.0",
+    "@sentry/utils": "5.5.0",
+    "tslib": "^1.10.0",
+    "vtils": "^2.10.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^7.5.2",
+    "@types/jest": "^24.0.11",
+    "@types/node": "^11.11.3",
+    "bili": "^4.8.0",
+    "codecov": "^3.3.0",
+    "commitlint-config-io": "^0.3.0",
+    "eslint": "^5.15.0",
+    "eslint-config-io": "^0.5.1",
+    "husky": "^1.3.1",
+    "jest": "^24.7.1",
+    "lint-staged": "^8.1.5",
+    "rollup-plugin-typescript2": "^0.21.2",
+    "standard-version": "^4.4.0",
+    "ts-jest": "^24.0.2",
+    "ts-node": "^8.0.3",
+    "typescript": "^3.5.3"
+  }
+}
