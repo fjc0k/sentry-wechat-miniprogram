@@ -31,7 +31,8 @@
     "release": "standard-version --commit-all --no-verify && git push --follow-tags origin master && npm publish",
     "release:major": "standard-version --commit-all --no-verify --release-as major && git push --follow-tags origin master && npm publish",
     "release-beta": "standard-version --commit-all --no-verify --prerelease beta && git push --follow-tags origin master && npm publish --tag=next",
-    "release-beta:major": "standard-version --commit-all --no-verify --prerelease beta --release-as major && git push --follow-tags origin master && npm publish --tag=next"
+    "release-beta:major": "standard-version --commit-all --no-verify --prerelease beta --release-as major && git push --follow-tags origin master && npm publish --tag=next",
+    "prepublishOnly": "bili"
   },
   "standard-version": {
     "scripts": {
