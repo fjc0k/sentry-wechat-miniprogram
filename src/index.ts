@@ -34,8 +34,8 @@ export {
   withScope,
 } from '@sentry/core'
 
-export { BrowserOptions } from './backend'
-export { BrowserClient, ReportDialogOptions } from './client'
+export { WechatMiniprogramOptions as BrowserOptions } from './backend'
+export { WechatMiniprogramClient as BrowserClient, ReportDialogOptions } from './client'
 export { defaultIntegrations, forceLoad, init, lastEventId, onLoad, showReportDialog, flush, close, wrap } from './sdk'
 export { SDK_NAME, SDK_VERSION } from './version'
 

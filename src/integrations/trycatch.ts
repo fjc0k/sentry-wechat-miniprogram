@@ -29,7 +29,7 @@ export class TryCatch implements Integration {
           type: 'instrument',
         },
       })
-      return original.apply(this, args)
+      return (original as any).apply(this, args)
     }
   }
 
@@ -88,7 +88,7 @@ export class TryCatch implements Integration {
           // can sometimes get 'Permission denied to access property "handle Event'
         }
 
-        return original.call(
+        return (original as any).call(
           this,
           eventName,
           wrap((fn as any) as WrappedFunction, {
@@ -122,7 +122,7 @@ export class TryCatch implements Integration {
         } catch (e) {
           // ignore, accessing __sentry_wrapped__ will throw in some Selenium environments
         }
-        return original.call(this, eventName, callback, options)
+        return (original as any).call(this, eventName, callback, options)
       }
     })
   }

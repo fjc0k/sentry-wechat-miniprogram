@@ -1,20 +1,14 @@
-import { addExceptionTypeValue, isString, logger, normalize, truncate } from '@sentry/utils'
+import { _subscribe, StackTrace as TraceKitStackTrace } from '../tracekit'
+import { addExceptionTypeValue, isError, isString, logger, normalize, truncate } from '@sentry/utils'
+import { captureEvent, captureException, getCurrentHub, withScope } from '@sentry/core'
 import { Event, Integration } from '@sentry/types'
-import { getCurrentHub } from '@sentry/core'
-
-import {
-  _installGlobalHandler,
-  _installGlobalUnhandledRejectionHandler,
-  _subscribe,
-  StackTrace as TraceKitStackTrace,
-} from '../tracekit'
 import { eventFromStacktrace } from '../parsers'
-import { shouldIgnoreOnError } from '../helpers'
+import { globalErrorFingerprint, shouldIgnoreOnError } from '../helpers'
 
 /** JSDoc */
 interface GlobalHandlersIntegrations {
   onerror: boolean,
-  onunhandledrejection: boolean,
+  onpagenotfound: boolean,
 }
 
 /** Global handlers */
@@ -36,7 +30,7 @@ export class GlobalHandlers implements Integration {
   public constructor(options?: GlobalHandlersIntegrations) {
     this._options = {
       onerror: true,
-      onunhandledrejection: true,
+      onpagenotfound: true,
       ...options,
     }
   }
@@ -76,13 +70,49 @@ export class GlobalHandlers implements Integration {
 
     if (this._options.onerror) {
       logger.log('Global Handler attached: onerror')
-      _installGlobalHandler()
+      this._installGlobalErrorHandler()
     }
 
-    if (this._options.onunhandledrejection) {
-      logger.log('Global Handler attached: onunhandledrejection')
-      _installGlobalUnhandledRejectionHandler()
+    if (this._options.onpagenotfound) {
+      logger.log('Global Handler attached: onpagenotfound')
+      this._installGlobalPageNotFoundHandler()
     }
+  }
+
+  private _installGlobalErrorHandler() {
+    wx.onError((msg) => {
+      withScope((scope) => {
+        const fingerprint = globalErrorFingerprint(msg)
+        let error
+        if (fingerprint) {
+          scope.setFingerprint(fingerprint)
+        }
+        if (!isError(msg)) {
+          if (fingerprint) {
+            const errorType = fingerprint[0] || 'UnknownAppError'
+            const errorMessage = fingerprint[1] || errorType
+            error = new Error(errorMessage)
+            error.name = errorType
+            error.stack = msg
+          } else {
+            error = new Error('UnknownAppError')
+            error.stack = msg
+          }
+        } else {
+          error = msg
+        }
+        captureException(error)
+      })
+    })
+  }
+
+  private _installGlobalPageNotFoundHandler() {
+    wx.onPageNotFound((res) => {
+      captureEvent({
+        message: 'page not found',
+        extra: res,
+      })
+    })
   }
 
   /**

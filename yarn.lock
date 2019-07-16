@@ -961,13 +961,17 @@
   dependencies:
     "@types/jest-diff" "*"
 
-"@types/node@*", "@types/node@^11.11.3":
+"@types/node@*":
   version "11.13.0"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-11.13.0.tgz#b0df8d6ef9b5001b2be3a94d909ce3c29a80f9e1"
 
 "@types/node@^11.13.4":
   version "11.13.4"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-11.13.4.tgz#f83ec3c3e05b174b7241fadeb6688267fe5b22ca"
+
+"@types/node@^12.6.2":
+  version "12.6.2"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.6.2.tgz#a5ccec6abb6060d5f20d256fb03ed743e9774999"
 
 "@types/q@^1.5.1":
   version "1.5.2"
@@ -4410,6 +4414,10 @@ minipass@^2.2.1, minipass@^2.3.4:
   dependencies:
     safe-buffer "^5.1.2"
     yallist "^3.0.0"
+
+miniprogram-api-typings@^2.6.5-2:
+  version "2.6.5-2"
+  resolved "https://registry.yarnpkg.com/miniprogram-api-typings/-/miniprogram-api-typings-2.6.5-2.tgz#990e3e5b91074ba4306bf6b8173cf38b632b4d3f"
 
 minizlib@^1.1.1:
   version "1.2.1"

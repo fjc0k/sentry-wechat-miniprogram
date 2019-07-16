@@ -12,7 +12,9 @@
     "outDir": "lib",
     "skipLibCheck": true,
     "newLine": "LF",
-    "importHelpers": true
+    "importHelpers": true,
+    "lib": ["dom", "esnext"],
+    "types": ["node", "miniprogram-api-typings"]
   },
   "include": [
     "src"

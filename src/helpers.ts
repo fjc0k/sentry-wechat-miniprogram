@@ -1,4 +1,4 @@
-import { addExceptionTypeValue, isString, normalize } from '@sentry/utils'
+import { addExceptionTypeValue, isError, isString, logger, normalize } from '@sentry/utils'
 import { captureException, getCurrentHub, withScope } from '@sentry/core'
 import { Mechanism, Event as SentryEvent, WrappedFunction } from '@sentry/types'
 
@@ -335,4 +335,72 @@ function _htmlElementAsString(elem: HTMLElement): string {
     }
   }
   return out.join('')
+}
+
+export function getCurrentPage() {
+  if (typeof getCurrentPages === 'function') {
+    const pages = getCurrentPages()
+    if (pages.length === 0) {
+      return 'unknown'
+    }
+    return pages[pages.length - 1].route
+  }
+  return 'unknown'
+}
+
+export function getPrevPage(delta: number) {
+  if (typeof getCurrentPages === 'function') {
+    const pages = getCurrentPages()
+    if (pages.length === 0) {
+      return 'unknown'
+    }
+    if (!delta) {
+      delta = 1
+    }
+    if (pages[pages.length - 1 - delta]) {
+      return pages[pages.length - 1 - delta].route
+    }
+  }
+  return 'unknown'
+}
+
+export function globalErrorFingerprint(msg: any) {
+  try {
+    if (isError(msg)) {
+      msg = msg.message
+    }
+    return msg.split('\n').slice(0, 2)
+  } catch (e) {
+    return null
+  }
+}
+
+export function fill(source: {
+  [key: string]: any,
+}, name: string, replacement: (...args: any[]) => any): void {
+  try {
+    if (!(name in source) || (source[name]).__sentry__) {
+      return
+    }
+    const original = source[name]
+    const wrapped = replacement(original)
+    wrapped.__sentry__ = true
+    wrapped.__sentry_original__ = original
+    wrapped.__sentry_wrapped__ = wrapped
+    if (Object.defineProperties && Object.getOwnPropertyDescriptor) {
+      const desp = Object.getOwnPropertyDescriptor(source, name)
+      if (!desp || !desp.configurable) {
+        throw new Error('unable to config')
+      }
+      Object.defineProperties(source, {
+        [name]: {
+          value: wrapped,
+        },
+      })
+    } else {
+      source[name] = wrapped
+    }
+  } catch (e) {
+    logger.warn(`fail to reset property ${name}`)
+  }
 }

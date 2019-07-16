@@ -1,11 +1,8 @@
 import {
   addExceptionTypeValue,
-  isDOMError,
-  isDOMException,
   isError,
   isErrorEvent,
   isPlainObject,
-  supportsFetch,
   SyncPromise,
 } from '@sentry/utils'
 import { BaseBackend } from '@sentry/core'
@@ -13,13 +10,13 @@ import { Event, EventHint, Options, Severity, Transport } from '@sentry/types'
 
 import { _computeStackTrace } from './tracekit'
 import { eventFromPlainObject, eventFromStacktrace, prepareFramesForEvent } from './parsers'
-import { FetchTransport, XHRTransport } from './transports'
+import { RequestTransport } from './transports'
 
 /**
  * Configuration options for the Sentry Browser SDK.
  * @see BrowserClient for more information.
  */
-export interface BrowserOptions extends Options {
+export interface WechatMiniprogramOptions extends Options {
   /**
    * A pattern for error URLs which should not be sent to Sentry.
    * To whitelist certain errors instead, use {@link Options.whitelistUrls}.
@@ -36,10 +33,10 @@ export interface BrowserOptions extends Options {
 }
 
 /**
- * The Sentry Browser SDK Backend.
+ * The Sentry Wechat Miniprogram SDK Backend.
  * @hidden
  */
-export class BrowserBackend extends BaseBackend<BrowserOptions> {
+export class WechatMiniprogramBackend extends BaseBackend<WechatMiniprogramOptions> {
   /**
    * @inheritDoc
    */
@@ -57,10 +54,8 @@ export class BrowserBackend extends BaseBackend<BrowserOptions> {
     if (this._options.transport) {
       return new this._options.transport(transportOptions)
     }
-    if (supportsFetch()) {
-      return new FetchTransport(transportOptions)
-    }
-    return new XHRTransport(transportOptions)
+
+    return new RequestTransport(transportOptions)
   }
 
   /**
@@ -75,20 +70,6 @@ export class BrowserBackend extends BaseBackend<BrowserOptions> {
       exception = errorEvent.error // tslint:disable-line:no-parameter-reassignment
       event = eventFromStacktrace(_computeStackTrace(exception as Error))
       return SyncPromise.resolve(this._buildEvent(event, hint))
-    }
-    if (isDOMError(exception as DOMError) || isDOMException(exception as DOMException)) {
-      // If it is a DOMError or DOMException (which are legacy APIs, but still supported in some browsers)
-      // then we just extract the name and message, as they don't provide anything else
-      // https://developer.mozilla.org/en-US/docs/Web/API/DOMError
-      // https://developer.mozilla.org/en-US/docs/Web/API/DOMException
-      const domException = exception as DOMException
-      const name = domException.name || (isDOMError(domException) ? 'DOMError' : 'DOMException')
-      const message = domException.message ? `${name}: ${domException.message}` : name
-
-      return this.eventFromMessage(message, Severity.Error, hint).then(messageEvent => {
-        addExceptionTypeValue(messageEvent, message)
-        return SyncPromise.resolve(this._buildEvent(messageEvent, hint))
-      })
     }
     if (isError(exception as Error)) {
       // we have a real Error object, do nothing

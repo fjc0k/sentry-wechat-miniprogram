@@ -1,9 +1,9 @@
-import { API, BaseClient, Scope } from '@sentry/core'
+import { BaseClient, Scope } from '@sentry/core'
 import { DsnLike, Event, EventHint } from '@sentry/types'
-import { getGlobalObject, logger, SyncPromise } from '@sentry/utils'
+import { SyncPromise } from '@sentry/utils'
 
-import { BrowserBackend, BrowserOptions } from './backend'
 import { SDK_NAME, SDK_VERSION } from './version'
+import { WechatMiniprogramBackend, WechatMiniprogramOptions } from './backend'
 
 /**
  * All properties the report dialog supports
@@ -38,14 +38,14 @@ export interface ReportDialogOptions {
  * @see BrowserOptions for documentation on configuration options.
  * @see SentryClient for usage documentation.
  */
-export class BrowserClient extends BaseClient<BrowserBackend, BrowserOptions> {
+export class WechatMiniprogramClient extends BaseClient<WechatMiniprogramBackend, WechatMiniprogramOptions> {
   /**
    * Creates a new Browser SDK instance.
    *
    * @param options Configuration options for this SDK.
    */
-  public constructor(options: BrowserOptions = {}) {
-    super(BrowserBackend, options)
+  public constructor(options: WechatMiniprogramOptions = {}) {
+    super(WechatMiniprogramBackend, options)
   }
 
   /**
@@ -59,7 +59,7 @@ export class BrowserClient extends BaseClient<BrowserBackend, BrowserOptions> {
       packages: [
         ...((event.sdk && event.sdk.packages) || []),
         {
-          name: 'npm:@sentry/browser',
+          name: 'npm:sentry-wechat-miniprogram',
           version: SDK_VERSION,
         },
       ],
@@ -74,38 +74,8 @@ export class BrowserClient extends BaseClient<BrowserBackend, BrowserOptions> {
    *
    * @param options Set individual options for the dialog
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public showReportDialog(options: ReportDialogOptions = {}): void {
-    // doesn't work without a document (React Native)
-    const document = getGlobalObject<Window>().document
-    if (!document) {
-      return
-    }
-
-    if (!this._isEnabled()) {
-      logger.error('Trying to call showReportDialog with Sentry Client is disabled')
-      return
-    }
-
-    const dsn = options.dsn || this.getDsn()
-
-    if (!options.eventId) {
-      logger.error('Missing `eventId` option in showReportDialog call')
-      return
-    }
-
-    if (!dsn) {
-      logger.error('Missing `Dsn` option in showReportDialog call')
-      return
-    }
-
-    const script = document.createElement('script')
-    script.async = true
-    script.src = new API(dsn).getReportDialogEndpoint(options)
-
-    if (options.onLoad) {
-      script.onload = options.onLoad
-    }
-
-    (document.head || document.body).appendChild(script)
+    // not supported
   }
 }
