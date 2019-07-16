@@ -1,7 +1,7 @@
 {
   "name": "sentry-wechat-miniprogram",
   "version": "0.0.0",
-  "description": "A project.",
+  "description": "@sentry/browser 的微信小程序版本。",
   "main": "index.js",
   "author": {
     "name": "Jay Fong",
