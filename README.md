@@ -14,7 +14,7 @@ yarn add sentry-wechat-miniprogram
 npm install sentry-wechat-miniprogram --save
 ```
 
-你也可进入这里 [https://unpkg.com/sentry-wechat-miniprogram@0.1.0/lib/](https://unpkg.com/sentry-wechat-miniprogram@0.1.0/lib/) 下载 `index.js` 手动在项目中引入。
+你也可进入这里 [https://unpkg.com/sentry-wechat-miniprogram/lib/](https://unpkg.com/sentry-wechat-miniprogram/lib/) 下载 `index.js` 手动在项目中引入。
 
 ## 使用
 
