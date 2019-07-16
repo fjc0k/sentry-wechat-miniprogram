@@ -1,6 +1,6 @@
 # sentry-wechat-miniprogram
 
-修改自 [@sentry/browser](https://www.npmjs.com/package/@sentry/browser)，使用方法相同。
+修改自 [@sentry/browser](https://www.npmjs.com/package/@sentry/browser) 5.5.0 版本，使用方法相同。
 
 但因为劫持了小程序原生 `wx` 对象下面的一些方法，所以 **不支持和小程序插件一起使用**。
 
