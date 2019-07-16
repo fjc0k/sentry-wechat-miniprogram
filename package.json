@@ -1,6 +1,6 @@
 {
   "name": "sentry-wechat-miniprogram",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "@sentry/browser 的微信小程序版本。",
   "main": "index.js",
   "author": {
